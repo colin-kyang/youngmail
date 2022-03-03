@@ -4,5 +4,12 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.226.1:8848
+  application:
+    name: yongmall-memeber
+
 server:
   port: 8000

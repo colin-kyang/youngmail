@@ -14,6 +14,7 @@
         <module name="member" />
         <module name="ware" />
         <module name="renren-fast" />
+        <module name="gateway" />
         <module name="order" />
         <module name="renren-generator" />
       </profile>
@@ -21,6 +22,7 @@
     <bytecodeTargetLevel>
       <module name="common" target="8" />
       <module name="coupon" target="1.8" />
+      <module name="gateway" target="1.8" />
       <module name="gulimall-common" target="8" />
       <module name="member" target="1.8" />
       <module name="order" target="1.8" />
@@ -34,6 +36,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="coupon" options="-parameters" />
+      <module name="gateway" options="-parameters" />
       <module name="member" options="-parameters" />
       <module name="order" options="-parameters" />
       <module name="product" options="-parameters" />
