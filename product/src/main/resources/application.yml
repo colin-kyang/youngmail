@@ -12,4 +12,4 @@ spring:
     name: yongmall-product
 
 server:
-  port: 6000
+  port: 6001

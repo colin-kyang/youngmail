@@ -1,14 +1,11 @@
 package com.example.youngmall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.youngmall.product.entity.CategoryEntity;
 import com.example.youngmall.product.service.CategoryService;
@@ -31,13 +28,12 @@ public class CategoryController {
     private CategoryService categoryService;
 
     /**
-     * 列表
+     * 查出所有分类及其子类，并按照树形结构进行返回
      */
-    @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = categoryService.queryPage(params);
-
-        return R.ok().put("page", page);
+    @RequestMapping(value="/list/tree",method= RequestMethod.GET)
+    public R list(){
+        List<CategoryEntity> categoryEntityList=categoryService.listWithTree();
+        return R.ok().put("categoryEntityList", categoryEntityList);
     }
 
 
