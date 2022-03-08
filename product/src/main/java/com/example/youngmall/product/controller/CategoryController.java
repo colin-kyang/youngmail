@@ -38,9 +38,9 @@ public class CategoryController {
 
 
     /**
-     * 信息
+     * 根据商品类别id ，获取其具体向下
      */
-    @RequestMapping("/info/{catId}")
+    @RequestMapping(value="/info/{catId}",method=RequestMethod.GET)
     public R info(@PathVariable("catId") Long catId){
 		CategoryEntity category = categoryService.getById(catId);
 
@@ -48,32 +48,29 @@ public class CategoryController {
     }
 
     /**
-     * 保存
+     * 新增商品类别
      */
-    @RequestMapping("/save")
+    @RequestMapping(value="/save",method=RequestMethod.POST)
     public R save(@RequestBody CategoryEntity category){
 		categoryService.save(category);
-
         return R.ok();
     }
 
     /**
-     * 修改
+     * 修改商品类别
      */
-    @RequestMapping("/update")
+    @RequestMapping(value="/update",method=RequestMethod.POST)
     public R update(@RequestBody CategoryEntity category){
 		categoryService.updateById(category);
-
         return R.ok();
     }
 
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @RequestMapping(value="/delete",method=RequestMethod.DELETE)
     public R delete(@RequestBody Long[] catIds){
 		categoryService.removeByIds(Arrays.asList(catIds));
-
         return R.ok();
     }
 

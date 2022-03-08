@@ -1,22 +1,18 @@
 spring:
+  profiles:
+    active: dev
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   cloud:
-    nacos:
-      discovery:
-        server-addr: 192.168.226.1:8848
     gateway:
       routes:
-        - id: test_route
-          uri: https://www.baidu.com
+        - id: product-server
+          uri: localhost:6001/
           predicates:
-            - Query=url,qq
+            - Path=/product/**
+      enabled: true
 
-        - id: path_route
-          uri: https://www.qq.com
-          predicates:
-            - Path=/red/{segment}
   application:
     name: gateway
 
