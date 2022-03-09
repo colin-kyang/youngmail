@@ -15,6 +15,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
     </properties>
 
     <dependencies>
@@ -67,12 +68,16 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
             <version>2021.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
-                </exclusion>
-            </exclusions>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.cloud</groupId>-->
+<!--                    <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 <!--        统一配置-->
             <dependency>
@@ -91,8 +96,8 @@
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>0.2.2.RELEASE</version>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
