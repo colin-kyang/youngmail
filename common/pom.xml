@@ -79,6 +79,7 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+
 <!--        统一配置-->
             <dependency>
                 <groupId>io.springfox</groupId>
