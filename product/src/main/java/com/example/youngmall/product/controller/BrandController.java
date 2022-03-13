@@ -4,11 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.youngmall.product.entity.BrandEntity;
 import com.example.youngmall.product.service.BrandService;
@@ -64,10 +60,9 @@ public class BrandController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @RequestMapping(value="/update",method= RequestMethod.POST)
     public R update(@RequestBody BrandEntity brand){
 		brandService.updateById(brand);
-
         return R.ok();
     }
 
@@ -78,6 +73,21 @@ public class BrandController {
     public R delete(@RequestBody Long[] brandIds){
 		brandService.removeByIds(Arrays.asList(brandIds));
 
+        return R.ok();
+    }
+
+    /**
+     * 更新brandEntity 的showStatus 字段
+     * 1：表示显示
+     * 0：表示不显示
+     * @param brandId
+     * @param showStatus
+     * @return
+     */
+    @RequestMapping(value="/update/{brandId}/{showStatus}",method = RequestMethod.POST)
+    public R updateShowStatus(@PathVariable Long brandId,@PathVariable int showStatus)
+    {
+        brandService.updateShoeStatus(brandId,showStatus);
         return R.ok();
     }
 

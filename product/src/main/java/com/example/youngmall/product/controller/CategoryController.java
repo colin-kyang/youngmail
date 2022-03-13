@@ -27,6 +27,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+
     /**
      * 查出所有分类及其子类，并按照树形结构进行返回
      */
@@ -65,12 +66,13 @@ public class CategoryController {
         return R.ok();
     }
 
+
     /**
      * 删除
      */
-    @RequestMapping(value="/delete",method=RequestMethod.DELETE)
+    @RequestMapping(value="/delete",method=RequestMethod.POST)
     public R delete(@RequestBody Long[] catIds){
-		categoryService.removeByIds(Arrays.asList(catIds));
+		categoryService.removeCategoryByIds(catIds);
         return R.ok();
     }
 

@@ -1,5 +1,7 @@
 package com.example.youngmall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import io.renren.common.utils.Query;
 import org.springframework.stereotype.Service;
 import java.util.Map;
@@ -26,4 +28,10 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
         return new PageUtils(page);
     }
 
+    @Override
+    public void updateShoeStatus(Long brandId, int showStatus) {
+        UpdateWrapper<BrandEntity> updateWrapper=new UpdateWrapper<>();
+        updateWrapper.eq("brandId",brandId).set("showStatus",showStatus);
+        baseMapper.update(null,updateWrapper);
+    }
 }
