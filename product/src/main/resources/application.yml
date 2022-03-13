@@ -6,6 +6,12 @@ spring:
       matching-strategy: ant_path_matcher
   application:
     name: yongmall-product
+  cloud:
+    alicloud:
+      access-key: LTAI5tGa8sPY7Y9JEHHbxfQ9
+      accessKeySecret: JR0Pdmh9gr9al3kEvzC7mOmZLddYIN
+      oss:
+        endpoint: oss-cn-beijing.aliyuncs.com
 
 server:
   port: 6001

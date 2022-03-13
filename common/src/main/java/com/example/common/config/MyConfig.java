@@ -15,8 +15,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class MyConfig {
-    @Value("${swagger2.configuredFlag}")
-    private boolean swagger2ConfiguredFlag;
+//    @Value("${swagger2.configuredFlag}")
+//    private boolean swagger2ConfiguredFlag;
 
     /**
      * @方法名：createRestApi

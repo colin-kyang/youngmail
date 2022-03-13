@@ -31,7 +31,8 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
     @Override
     public void updateShoeStatus(Long brandId, int showStatus) {
         UpdateWrapper<BrandEntity> updateWrapper=new UpdateWrapper<>();
-        updateWrapper.eq("brandId",brandId).set("showStatus",showStatus);
+        //注意这里应该使用数据库字段
+        updateWrapper.eq("brand_id",brandId).set("show_status",showStatus);
         baseMapper.update(null,updateWrapper);
     }
 }
