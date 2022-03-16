@@ -3,6 +3,7 @@ package com.example.youngmall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.example.youngmall.product.feign.OssFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,9 @@ import com.example.common.utils.R;
 public class BrandController {
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private OssFeignService ossFeignService;
 
     /**
      * 列表
@@ -89,6 +93,12 @@ public class BrandController {
     {
         brandService.updateShoeStatus(brandId,showStatus);
         return R.ok();
+    }
+
+    @RequestMapping(value="/upload/file",method =RequestMethod.POST)
+    public R uploadBrandFile(@RequestParam("filePath") String filePath)
+    {
+        return ossFeignService.upload(filePath);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.youngmall.product.config;
+package com.example.third_party.config;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
@@ -8,7 +8,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan("com.example.common")
+@ComponentScan("com.example.third_party")
+/**
+ * 原生上传工具
+ */
 public class UploadConfig {
     @Value("${spring.cloud.alicloud.access-key}")
     String accessKeyId;

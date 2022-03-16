@@ -14,6 +14,7 @@
         <module name="member" />
         <module name="ware" />
         <module name="renren-fast" />
+        <module name="third_party" />
         <module name="gateway" />
         <module name="order" />
         <module name="renren-generator" />
@@ -29,6 +30,8 @@
       <module name="product" target="1.8" />
       <module name="renren-fast" target="1.8" />
       <module name="renren-generator" target="1.8" />
+      <module name="third-party" target="1.8" />
+      <module name="third_party" target="1.8" />
       <module name="ware" target="1.8" />
       <module name="youngmall" target="1.5" />
     </bytecodeTargetLevel>
@@ -42,6 +45,8 @@
       <module name="product" options="-parameters" />
       <module name="renren-fast" options="-parameters" />
       <module name="renren-generator" options="-parameters" />
+      <module name="third-party" options="-parameters" />
+      <module name="third_party" options="-parameters" />
       <module name="ware" options="-parameters" />
     </option>
   </component>
