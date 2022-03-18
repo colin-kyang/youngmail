@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -74,13 +75,13 @@ public class uploadUtilsImpl implements uploadUtils {
         byte[] binaryData = postPolicy.getBytes("utf-8");
         String encodedPolicy = BinaryUtil.toBase64String(binaryData);
         String postSignature = ossclient.calculatePostSignature(postPolicy);
-
-        mapp.put("ossaccessKeyId",accessKeyId);
+        Date data=new Date();
+        mapp.put("accessid",accessKeyId);
         mapp.put("policy",encodedPolicy);
         mapp.put("signature",postSignature);
         mapp.put("dir",dir);
         mapp.put("host",host);
-        mapp.put("key",String.valueOf(expireEndTime/1000));
+        mapp.put("expire",String.valueOf(expireEndTime/1000));
         return mapp;
     }
 }

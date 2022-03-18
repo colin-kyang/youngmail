@@ -44,8 +44,9 @@ public class OssUploadController {
     }
 
     @RequestMapping(value="/policy",method=RequestMethod.GET)
-    public Map<String,String> uploadByPolicy(@RequestParam("t") String userName) throws UnsupportedEncodingException {
-        Map<String,String> res=uploadUtils.uploadByPlolicy(userName+"/");
+    public Map<String,String> uploadByPolicy(@RequestParam("user") String userName) throws UnsupportedEncodingException {
+        Date date=new Date();
+        Map<String,String> res=uploadUtils.uploadByPlolicy(userName+"/"+date.toString());
         return res;
     }
 

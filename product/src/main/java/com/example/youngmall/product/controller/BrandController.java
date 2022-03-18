@@ -1,10 +1,15 @@
 package com.example.youngmall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
+import com.example.common.valid.AddGroup;
+import com.example.common.valid.UpdateGroup;
 import com.example.youngmall.product.feign.OssFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.youngmall.product.entity.BrandEntity;
@@ -12,6 +17,7 @@ import com.example.youngmall.product.service.BrandService;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.R;
 
+import javax.validation.Valid;
 
 
 /**
@@ -33,10 +39,9 @@ public class BrandController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @RequestMapping(value="/list",method = RequestMethod.GET)
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = brandService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
@@ -44,7 +49,7 @@ public class BrandController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{brandId}")
+    @RequestMapping(value="/info/{brandId}",method=RequestMethod.GET)
     public R info(@PathVariable("brandId") Long brandId){
 		BrandEntity brand = brandService.getById(brandId);
 
@@ -54,10 +59,9 @@ public class BrandController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
-    public R save(@RequestBody BrandEntity brand){
+    @RequestMapping(value="/save",method = RequestMethod.POST)
+    public R save(@Validated({AddGroup.class}) @RequestBody BrandEntity brand, BindingResult result){
 		brandService.save(brand);
-
         return R.ok();
     }
 
@@ -65,15 +69,15 @@ public class BrandController {
      * 修改
      */
     @RequestMapping(value="/update",method= RequestMethod.POST)
-    public R update(@RequestBody BrandEntity brand){
-		brandService.updateById(brand);
+    public R update(@Validated({UpdateGroup.class}) @RequestBody BrandEntity brand){
+        brandService.updateById(brand);
         return R.ok();
     }
 
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @RequestMapping(value="/delete",method=RequestMethod.POST)
     public R delete(@RequestBody Long[] brandIds){
 		brandService.removeByIds(Arrays.asList(brandIds));
 
@@ -100,5 +104,7 @@ public class BrandController {
     {
         return ossFeignService.upload(filePath);
     }
+
+
 
 }
