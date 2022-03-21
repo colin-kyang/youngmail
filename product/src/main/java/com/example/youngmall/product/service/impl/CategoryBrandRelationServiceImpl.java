@@ -1,7 +1,10 @@
 package com.example.youngmall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import io.renren.common.utils.Query;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -26,4 +29,29 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         return new PageUtils(page);
     }
 
+    /**
+     * 通过品牌id 获取对应种类
+     * @param brandId
+     * @return
+     */
+    @Override
+    public List<CategoryBrandRelationEntity> findRelationListByBrandId(Long brandId) {
+        QueryWrapper<CategoryBrandRelationEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("brand_id",brandId);
+        return baseMapper.selectList(wrapper);
+    }
+
+    @Override
+    public void updateCategory(Long catId, String name) {
+        CategoryBrandRelationEntity relationEntity=new CategoryBrandRelationEntity();
+        relationEntity.setCatelogId(catId);
+        relationEntity.setCatelogName(name);
+        //更新采用 UpdatWrapper
+        baseMapper.update(relationEntity,new UpdateWrapper<CategoryBrandRelationEntity>().eq("catlogId",catId));
+    }
+
+    @Override
+    public void updateBrandById(Long brandId, String brandName) {
+        baseMapper.updateBrand(brandId,brandName);
+    }
 }

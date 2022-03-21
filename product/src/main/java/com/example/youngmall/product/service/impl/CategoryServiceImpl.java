@@ -1,5 +1,7 @@
 package com.example.youngmall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.example.youngmall.product.service.CategoryBrandRelationService;
 import io.renren.common.utils.Query;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import com.example.youngmall.product.service.CategoryService;
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -42,7 +45,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Map<Long, CategoryEntity> mapp = new HashMap<>();
         for (CategoryEntity e : list) {
             mapp.put(e.getCatId(), e);
-            e.setChildren(new ArrayList<>());
+            if(e.getCatLevel() <=2){
+                e.setChildren(new ArrayList<>());
+            }
         }
         //2. 为每一个非第一层级设置其子分类
         for (CategoryEntity e : list) {
@@ -60,7 +65,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             if (e.getParentCid() == 0) {
                 result.add(e);
             }
-            if (e.getChildren().size() != 0) {
+            if (e.getChildren()!=null && e.getChildren().size() != 0) {
                 e.getChildren().sort(new Comparator<CategoryEntity>() {
                     @Override
                     public int compare(CategoryEntity o1, CategoryEntity o2) {
@@ -108,5 +113,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }
     }
 
+    /**
+     * 发现编号为catelogIdPath 的三级种类的 三级路径
+     *
+     * @param catelogIdPath
+     * @return
+     */
+    @Override
+    public Long[] findCategoryPath(Long catelogIdPath) {
+        List<Long> paths = new ArrayList<>();
+        paths.add(catelogIdPath);
+        //select parent_cid from where cat_id = catelogIdPath
+        CategoryEntity category = baseMapper.selectById(catelogIdPath);
+        Long parent_id = category.getParentCid();
+        CategoryEntity p1 = baseMapper.selectById(parent_id);
+        paths.add(p1.getCatId());
+        paths.add(p1.getParentCid());
+        //列表翻转
+        Collections.reverse(paths);
+        //列表可以直接转换为数组
+        return paths.toArray(new Long[paths.size()]);
+    }
 
 }

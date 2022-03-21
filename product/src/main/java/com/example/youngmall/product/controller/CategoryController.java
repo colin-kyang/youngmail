@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.example.youngmall.product.service.BrandService;
+import com.example.youngmall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,10 @@ import com.example.common.utils.R;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
+
 
 
     /**
@@ -63,6 +69,8 @@ public class CategoryController {
     @RequestMapping(value="/update",method=RequestMethod.POST)
     public R update(@RequestBody CategoryEntity category){
 		categoryService.updateById(category);
+        //种类更新
+        categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
         return R.ok();
     }
 

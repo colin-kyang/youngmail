@@ -3,12 +3,9 @@ package com.example.youngmall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.example.youngmall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.youngmall.product.entity.AttrGroupEntity;
 import com.example.youngmall.product.service.AttrGroupService;
@@ -30,41 +27,52 @@ public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     /**
      * 列表
      */
-    @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = attrGroupService.queryPage(params);
-
+    @RequestMapping(value="/list/{catId}",method = RequestMethod.GET)
+    public R list(@PathVariable Long catId,@RequestParam Map<String, Object> params){
+        PageUtils page;
+        // 查询所有数据，均需要考虑条件查询
+        if(catId == 0) {
+            page = attrGroupService.queryPage(params);
+        } else {
+            //查找特定 第三分类的属性分组
+            page=attrGroupService.queryPage(params,catId);
+        }
         return R.ok().put("page", page);
     }
 
 
     /**
-     * 信息
+     * 详细信息
      */
-    @RequestMapping("/info/{attrGroupId}")
+    @RequestMapping(value="/info/{attrGroupId}",method=RequestMethod.GET)
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
 		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
-
+        //还需要拼接完整路径 [数组形式]
+        //查询所属类别的三级完整属性
+        Long [] catlogIdPath=categoryService.findCategoryPath(attrGroup.getCatelogId());
+        attrGroup.setCatelogIdPath(catlogIdPath);
         return R.ok().put("attrGroup", attrGroup);
     }
 
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @RequestMapping(value="/save",method= RequestMethod.POST)
     public R save(@RequestBody AttrGroupEntity attrGroup){
 		attrGroupService.save(attrGroup);
-
         return R.ok();
     }
 
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @RequestMapping(value="/update",method=RequestMethod.POST)
     public R update(@RequestBody AttrGroupEntity attrGroup){
 		attrGroupService.updateById(attrGroup);
 
@@ -74,10 +82,9 @@ public class AttrGroupController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @RequestMapping(value="/delete",method=RequestMethod.POST)
     public R delete(@RequestBody Long[] attrGroupIds){
 		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
-
         return R.ok();
     }
 

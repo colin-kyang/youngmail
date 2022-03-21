@@ -1,14 +1,14 @@
 package com.example.youngmall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.example.youngmall.product.service.BrandService;
+import com.example.youngmall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.youngmall.product.entity.CategoryBrandRelationEntity;
 import com.example.youngmall.product.service.CategoryBrandRelationService;
@@ -30,13 +30,31 @@ public class CategoryBrandRelationController {
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
 
+    @Autowired
+    private BrandService brandService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    /**
+     * 获取品牌关联的分类
+     * @param brandId
+     * @return
+     */
+    @RequestMapping(value="catelog/list",method=RequestMethod.GET)
+//    @GetMapping()
+    public R categoryList(@RequestParam("brandId") Long brandId)
+    {
+        List<CategoryBrandRelationEntity> categoryBrandRelationList=categoryBrandRelationService.findRelationListByBrandId(brandId);
+        return R.ok().put("data",categoryBrandRelationList);
+    }
+
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @RequestMapping(value="/list",method = RequestMethod.GET)
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = categoryBrandRelationService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
@@ -44,7 +62,7 @@ public class CategoryBrandRelationController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
+    @RequestMapping(value="/info/{id}",method = RequestMethod.GET)
     public R info(@PathVariable("id") Long id){
 		CategoryBrandRelationEntity categoryBrandRelation = categoryBrandRelationService.getById(id);
 
@@ -52,19 +70,26 @@ public class CategoryBrandRelationController {
     }
 
     /**
-     * 保存
+     * 新增品牌_分类 条目
+     * 添加冗余字段，便于后续查询
      */
-    @RequestMapping("/save")
-    public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
-
+    @RequestMapping(value="/save",method=RequestMethod.POST)
+    public R saveDetail(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
+        Long brandId = categoryBrandRelation.getBrandId();
+        Long catelogId = categoryBrandRelation.getCatelogId();
+        // 查询品牌 种类名字
+        String brandName=brandService.getById(brandId).getName();
+        String catelogName=categoryService.getById(catelogId).getName();
+        categoryBrandRelation.setBrandName(brandName);
+        categoryBrandRelation.setCatelogName(catelogName);
+        categoryBrandRelationService.save(categoryBrandRelation);
         return R.ok();
     }
 
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @RequestMapping(value="/update",method=RequestMethod.POST)
     public R update(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
 		categoryBrandRelationService.updateById(categoryBrandRelation);
 
@@ -74,10 +99,9 @@ public class CategoryBrandRelationController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @RequestMapping(value="/delete",method=RequestMethod.POST)
     public R delete(@RequestBody Long[] ids){
 		categoryBrandRelationService.removeByIds(Arrays.asList(ids));
-
         return R.ok();
     }
 

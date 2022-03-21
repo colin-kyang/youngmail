@@ -1,12 +1,12 @@
 package com.example.youngmall.product.controller;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.example.common.valid.AddGroup;
 import com.example.common.valid.UpdateGroup;
 import com.example.youngmall.product.feign.OssFeignService;
+import com.example.youngmall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -16,8 +16,6 @@ import com.example.youngmall.product.entity.BrandEntity;
 import com.example.youngmall.product.service.BrandService;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.R;
-
-import javax.validation.Valid;
 
 
 /**
@@ -35,6 +33,9 @@ public class BrandController {
 
     @Autowired
     private OssFeignService ossFeignService;
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     /**
      * 列表
@@ -71,6 +72,8 @@ public class BrandController {
     @RequestMapping(value="/update",method= RequestMethod.POST)
     public R update(@Validated({UpdateGroup.class}) @RequestBody BrandEntity brand){
         brandService.updateById(brand);
+        //级联更新
+        categoryBrandRelationService.updateBrandById(brand.getBrandId(), brand.getName());
         return R.ok();
     }
 
