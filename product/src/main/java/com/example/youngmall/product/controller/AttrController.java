@@ -35,11 +35,19 @@ public class AttrController {
     private AttrAttrgroupRelationDao attrAttrgroupRelationDao;
 
     /**
-     * 列表
+     * 列表 区分规格属性与销售属性
      */
-    @RequestMapping(value="/base/list/{catlogId}",method = RequestMethod.GET)
-    public R list(@RequestParam Map<String, Object> params,@PathVariable Long catlogId){
-        PageUtils page = attrService.queryPage(params,catlogId);
+    @RequestMapping(value="/{type}/list/{catlogId}",method = RequestMethod.GET)
+    public R list(@RequestParam Map<String, Object> params,@PathVariable Long catlogId,@PathVariable String type){
+        int attr_type;
+        if(type.equals("base")){
+            //规格参数
+            attr_type=0;
+        } else {
+            //销售属性
+            attr_type=1;
+        }
+        PageUtils page = attrService.queryPage(params,catlogId,attr_type);
         return R.ok().put("page", page);
     }
 

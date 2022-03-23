@@ -1,13 +1,19 @@
 package com.example.youngmall.product.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.youngmall.product.dao.AttrAttrgroupRelationDao;
 import com.example.youngmall.product.entity.AttrAttrgroupRelationEntity;
 import com.example.youngmall.product.entity.AttrEntity;
+import com.example.youngmall.product.entity.vo.AttrGroupRelationsVo;
 import com.example.youngmall.product.entity.vo.AttrVo;
+import com.example.youngmall.product.service.AttrAttrgroupRelationService;
 import com.example.youngmall.product.service.CategoryService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +43,7 @@ public class AttrGroupController {
     private CategoryService categoryService;
 
     @Autowired
-    private AttrAttrgroupRelationDao attrAttrgroupRelationDao;
+    private AttrAttrgroupRelationService attrAttrgroupRelationService;
 
     /**
      * 列表
@@ -92,6 +98,56 @@ public class AttrGroupController {
         return R.ok();
     }
 
+    /**
+     * 根据分组id 查找需要关联的所有属性
+     * @param attrgroupId
+     * @return
+     */
+    @GetMapping("/{attrgroupId}/attr/relation")
+    public R getRelation(@PathVariable Long attrgroupId)
+    {
+        List<AttrEntity> relationList=attrGroupService.getRelationByAttrGroupId(attrgroupId);
+        return R.ok().put("data",relationList);
+    }
 
+    /**
+     * 删除分组_属性关联
+     * @param attrGroupRelationsVos
+     * @return
+     */
+    @PostMapping("/attr/relation/delete")
+    public R deleteGroupRelation(@RequestBody AttrGroupRelationsVo[] attrGroupRelationsVos)
+    {
+        //只发一次删除请求，完成批量删除
+        attrAttrgroupRelationService.removeItems(attrGroupRelationsVos);
+        return R.ok();
+    }
+
+    /**
+     * 获取当前分组没有关联到到所有属性
+     * @param attrgroupId
+     * @param params
+     * @return
+     */
+    @GetMapping("/{attrgroupId}/noattr/relation")
+    public R findNoAttrRelation(@PathVariable Long attrgroupId,
+                                @RequestParam Map<String,Object> params)
+    {
+        PageUtils page = attrGroupService.findNoAttrRelation(attrgroupId,params);
+        return R.ok().put("page",page);
+    }
+
+
+    /**
+     * 添加分组-属性
+     * @param addAttrRelationVos
+     * @return
+     */
+    @PostMapping("/attr/relation")
+    public R addAttrRelation(@RequestBody AttrGroupRelationsVo [] addAttrRelationVos)
+    {
+        attrAttrgroupRelationService.addItems(addAttrRelationVos);
+        return R.ok();
+    }
 
 }

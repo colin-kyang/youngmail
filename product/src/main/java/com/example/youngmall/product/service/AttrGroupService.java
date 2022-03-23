@@ -2,8 +2,10 @@ package com.example.youngmall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.common.utils.PageUtils;
+import com.example.youngmall.product.entity.AttrEntity;
 import com.example.youngmall.product.entity.AttrGroupEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,5 +20,9 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     PageUtils queryPage(Map<String,Object> params,Long catId);
+
+    List<AttrEntity> getRelationByAttrGroupId(Long attrgroupId);
+
+    PageUtils findNoAttrRelation(Long attrgroupId, Map<String, Object> params);
 }
 
