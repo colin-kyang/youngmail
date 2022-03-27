@@ -24,7 +24,11 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
     public PageUtils queryPage(Map<String, Object> params, Long catlogId, Integer attr_type) {
         QueryWrapper<AttrEntity> wrapper = new QueryWrapper<>();
         String key = (String) params.getOrDefault("key", null);
-        wrapper.ne("attr_type",attr_type);
+        if (catlogId != 0) {
+            wrapper.eq("catelog_id", catlogId);
+        }
+
+        wrapper.ne("attr_type", attr_type);
         //关键字检索
         if (!StringUtils.isEmpty(key)) {
             wrapper.and((obj) -> {

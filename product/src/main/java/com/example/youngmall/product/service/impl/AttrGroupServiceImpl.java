@@ -110,13 +110,15 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
      */
     @Override
     public PageUtils findNoAttrRelation(Long attrgroupId, Map<String, Object> params) {
-        //1. 当前分组只能管来拿到自己所属分类内到所有属性
+        //1. 当前分组只能与 同属一一个catalog 下的属性建立关联
         //首先获取当前分组所属类别
         AttrGroupEntity attrGroupEntity = baseMapper.selectById(attrgroupId);
         Long catlogId = attrGroupEntity.getCatelogId();
-        //2. 当前分组只能关联别的分组没有引用到属性
+        //2. 当前分组只能关联别的分组没有引用到属性(包括自己的已经引用到的)
         //查找当前分类下到其他分组
-        List<AttrGroupEntity> list = baseMapper.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catlogId).ne("attr_group_id", attrgroupId));
+//        List<AttrGroupEntity> list = baseMapper.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catlogId).ne("attr_group_id", attrgroupId));
+        List<AttrGroupEntity> list = baseMapper.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id",catlogId));
+        //获取其他分组的 AttrGroupId
         List<Long> collect = list.stream().map((item) -> {
             return item.getAttrGroupId();
         }).collect(Collectors.toList());
@@ -124,6 +126,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         QueryWrapper<AttrAttrgroupRelationEntity> relationWrapper = new QueryWrapper<>();
         relationWrapper.in("attr_group_id",collect);
         List<AttrAttrgroupRelationEntity> groupId = attrAttrgroupRelationDao.selectList(relationWrapper);
+        //返回同属一个分组下 其他分组（包括自己） 所关联的种类id
         List<Long> attrIds = groupId.stream().map((item) -> {
             return item.getAttrId();
         }).collect(Collectors.toList());
