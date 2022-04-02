@@ -1,12 +1,14 @@
 package com.example.youngmall.product.controller;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.youngmall.product.entity.BrandEntity;
+import com.example.youngmall.product.entity.vo.BrandVo;
 import com.example.youngmall.product.service.BrandService;
 import com.example.youngmall.product.service.CategoryService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,7 @@ import com.example.common.utils.R;
 
 
 /**
- * 品牌分类关联
+ * 品牌-分类 关联
  *
  * @author colinyang
  * @email colin.kyang@outlook.com
@@ -47,6 +49,25 @@ public class CategoryBrandRelationController {
     {
         List<CategoryBrandRelationEntity> categoryBrandRelationList=categoryBrandRelationService.findRelationListByBrandId(brandId);
         return R.ok().put("data",categoryBrandRelationList);
+    }
+
+    /**
+     * 根据分类catId查找关联的品牌
+     * @param catelogId
+     * @return
+     */
+    @GetMapping(value="brands/list")
+    public R brandList(@RequestParam(value="catelogId",required = true) Long catelogId)
+    {
+        List<CategoryBrandRelationEntity> categoryBrandRelationEntityList = categoryBrandRelationService.findRelationListByCatelogId(catelogId);
+        List<BrandVo> brandVos = categoryBrandRelationEntityList.stream()
+                .map(brand -> {
+                    BrandVo vo = new BrandVo();
+                    BeanUtils.copyProperties(brand,vo);
+                    return vo;
+                })
+                .collect(Collectors.toList());
+        return R.ok().put("data",brandVos);
     }
 
     /**

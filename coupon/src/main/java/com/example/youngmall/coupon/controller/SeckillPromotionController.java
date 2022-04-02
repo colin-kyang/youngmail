@@ -22,10 +22,10 @@ import com.example.common.utils.R;
  *
  * @author colinyang
  * @email colin.kyang@outlook.com
- * @date 2022-03-02 19:24:56
+ * @date 2022-03-27 16:32:10
  */
 @RestController
-@RequestMapping("product/seckillpromotion")
+@RequestMapping("coupon/seckillpromotion")
 public class SeckillPromotionController {
     @Autowired
     private SeckillPromotionService seckillPromotionService;

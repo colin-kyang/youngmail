@@ -4,16 +4,18 @@ import cn.hutool.db.Page;
 import com.example.youngmall.product.dao.AttrAttrgroupRelationDao;
 import com.example.youngmall.product.entity.AttrAttrgroupRelationEntity;
 import com.example.youngmall.product.entity.AttrEntity;
+import com.example.youngmall.product.entity.vo.AttrGroupWithAttrsVo;
+import com.example.youngmall.product.service.AttrAttrgroupRelationService;
 import com.example.youngmall.product.service.AttrService;
 import io.renren.common.utils.Query;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -34,6 +36,9 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Autowired
     private AttrService attrService;
+
+    @Autowired
+    private AttrAttrgroupRelationService attrAttrgroupRelationService;
 
 
     @Override
@@ -145,5 +150,38 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
                 attrWrapper
         );
         return new PageUtils(page);
+    }
+
+    /**
+     * 查询分组 及该分组下的所有属性
+     * @param catelogId
+     * @return
+     */
+    @Override
+    public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId) {
+        //1. 查询分组信息
+        List<AttrGroupEntity> attrGroupEntities = this.list(new QueryWrapper<AttrGroupEntity>().eq("catelog_id",catelogId));
+        //2. 查询所有属性
+        return attrGroupEntities.stream()
+                .map(group ->{
+                    AttrGroupWithAttrsVo vo = new AttrGroupWithAttrsVo();
+                    BeanUtils.copyProperties(group,vo);
+                    //查询该分组下的属性列表
+                    List<Long> attrIds = attrAttrgroupRelationService.list(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_group_id",group.getAttrGroupId()))
+                            .stream()
+                            .map(attr -> {
+                                return attr.getAttrId();
+                            })
+                            .collect(Collectors.toList());
+                    List<AttrEntity> attrList =  new ArrayList<>();
+                    //按照attrIds 依次查询属性条目，封装到 attrList 中
+                    attrIds.stream()
+                            .forEach(id -> {
+                                attrList .add(attrService.getById(id));
+                            });
+                    vo.setAttrs(attrList);
+                    return vo;
+                })
+                .collect(Collectors.toList());
     }
 }

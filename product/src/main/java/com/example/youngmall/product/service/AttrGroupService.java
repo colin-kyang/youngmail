@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.common.utils.PageUtils;
 import com.example.youngmall.product.entity.AttrEntity;
 import com.example.youngmall.product.entity.AttrGroupEntity;
+import com.example.youngmall.product.entity.vo.AttrGroupWithAttrsVo;
 
 import java.util.List;
 import java.util.Map;
@@ -24,5 +25,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     List<AttrEntity> getRelationByAttrGroupId(Long attrgroupId);
 
     PageUtils findNoAttrRelation(Long attrgroupId, Map<String, Object> params);
+
+    List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId);
 }
 

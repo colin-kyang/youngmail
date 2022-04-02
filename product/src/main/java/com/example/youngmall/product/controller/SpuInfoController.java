@@ -3,6 +3,7 @@ package com.example.youngmall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.example.youngmall.product.entity.vo.SpuSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,12 +32,11 @@ public class SpuInfoController {
     private SpuInfoService spuInfoService;
 
     /**
-     * 列表
+     * Spu 管理：列表条件检索
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = spuInfoService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
@@ -55,9 +55,10 @@ public class SpuInfoController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody SpuInfoEntity spuInfo){
-		spuInfoService.save(spuInfo);
-
+    public R save(@RequestBody SpuSaveVo spuInfo){
+        //需要保存很多数据，包括关联数据，以及远程服务调用
+        //大保存功能
+		spuInfoService.saveSpuInfo(spuInfo);
         return R.ok();
     }
 

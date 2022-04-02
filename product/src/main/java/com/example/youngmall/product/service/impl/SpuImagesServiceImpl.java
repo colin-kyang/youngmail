@@ -2,7 +2,11 @@ package com.example.youngmall.product.service.impl;
 
 import io.renren.common.utils.Query;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -26,4 +30,23 @@ public class SpuImagesServiceImpl extends ServiceImpl<SpuImagesDao, SpuImagesEnt
         return new PageUtils(page);
     }
 
+    /**
+     * 保存spu_id 图片 地址
+     * @param images
+     * @param id
+     */
+    @Override
+    public void saveImages(List<String> images, Long id) {
+        if(images == null || images.size() == 0){
+                return ;
+        } else {
+            List<SpuImagesEntity> spuImagesEntities = images.stream().map(img ->{
+                SpuImagesEntity entity = new SpuImagesEntity();
+                entity.setSpuId(id);
+                entity.setImgUrl(img);
+                return entity;
+            }).collect(Collectors.toList());
+            this.saveBatch(spuImagesEntities);
+        }
+    }
 }

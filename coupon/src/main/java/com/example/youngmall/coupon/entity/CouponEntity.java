@@ -13,7 +13,7 @@ import lombok.Data;
  * 
  * @author colinyang
  * @email colin.kyang@outlook.com
- * @date 2022-03-02 19:24:56
+ * @date 2022-03-27 16:32:10
  */
 @Data
 @TableName("sms_coupon")

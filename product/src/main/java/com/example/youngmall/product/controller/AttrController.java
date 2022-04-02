@@ -2,11 +2,16 @@ package com.example.youngmall.product.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.youngmall.product.dao.AttrAttrgroupRelationDao;
 import com.example.youngmall.product.entity.AttrAttrgroupRelationEntity;
+import com.example.youngmall.product.entity.ProductAttrValueEntity;
 import com.example.youngmall.product.entity.vo.AttrVo;
+import com.example.youngmall.product.entity.vo.spuAttrVo;
+import com.example.youngmall.product.service.ProductAttrValueService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +38,9 @@ public class AttrController {
 
     @Autowired
     private AttrAttrgroupRelationDao attrAttrgroupRelationDao;
+
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
 
     /**
      * 列表 区分规格属性与销售属性
@@ -63,18 +71,21 @@ public class AttrController {
     }
 
     /**
-     * 保存
+     * 保存商品属性，以及其与商品分组的关联关系
      */
     @RequestMapping("/save")
     public R save(@RequestBody AttrVo attrVo) throws InvocationTargetException, IllegalAccessException {
         AttrEntity attr=new AttrEntity();
         //保存基本数据
         BeanUtils.copyProperties(attrVo,attr);
-        attrService.save(attr);
-        //添加进属性——分组关联表
+        attrService.save(attr);//注意，这里保存你无法得知它的编号
+        //添加属性-属性分组 关联列表
         AttrAttrgroupRelationEntity relationEntity=new AttrAttrgroupRelationEntity();
+        relationEntity.setAttrSort(0);
+        //获取当前分组的GroupId
         relationEntity.setAttrGroupId(attrVo.getAttrGroupId());
-        relationEntity.setAttrId(attrVo.getAttrId());
+        //insert 后会自动回填 TableId
+        relationEntity.setAttrId(attr.getAttrId());
         attrAttrgroupRelationDao.insert(relationEntity);
         return R.ok();
     }
@@ -85,7 +96,6 @@ public class AttrController {
     @RequestMapping("/update")
     public R update(@RequestBody AttrEntity attr){
 		attrService.updateById(attr);
-
         return R.ok();
     }
 
@@ -96,6 +106,27 @@ public class AttrController {
     public R delete(@RequestBody Long[] attrIds){
 		attrService.removeByIds(Arrays.asList(attrIds));
 
+        return R.ok();
+    }
+
+    /**
+     * 获取spu 规格
+     * @return
+     */
+    @GetMapping("/base/listforspu/{spuId}")
+    public R getSpu(@PathVariable Long spuId){
+         List<ProductAttrValueEntity> list = productAttrValueService.list(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id",spuId));
+         return R.ok().put("data",list);
+    }
+
+    /**
+     * 更新商品spu 规格
+     * @param spuId
+     * @return
+     */
+    @PostMapping("/update/{spuId}")
+    public R updateSpuById(@RequestBody List<ProductAttrValueEntity> spuAttrs,@PathVariable Long spuId) {
+        productAttrValueService.updateBySpuId(spuAttrs,spuId);
         return R.ok();
     }
 

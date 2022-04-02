@@ -12,6 +12,7 @@ import com.example.youngmall.product.dao.AttrAttrgroupRelationDao;
 import com.example.youngmall.product.entity.AttrAttrgroupRelationEntity;
 import com.example.youngmall.product.entity.AttrEntity;
 import com.example.youngmall.product.entity.vo.AttrGroupRelationsVo;
+import com.example.youngmall.product.entity.vo.AttrGroupWithAttrsVo;
 import com.example.youngmall.product.entity.vo.AttrVo;
 import com.example.youngmall.product.service.AttrAttrgroupRelationService;
 import com.example.youngmall.product.service.CategoryService;
@@ -148,6 +149,16 @@ public class AttrGroupController {
     {
         attrAttrgroupRelationService.addItems(addAttrRelationVos);
         return R.ok();
+    }
+
+    /**
+     * 获取分类下所有分组&关联属性
+     * @return
+     */
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable Long catelogId){
+        List<AttrGroupWithAttrsVo> attrGroupWithAttrsVos = attrGroupService.getAttrGroupWithAttrsByCatelogId(catelogId);
+        return R.ok().put("data",attrGroupWithAttrsVos);
     }
 
 }

@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 
  * @author colinyang
  * @email colin.kyang@outlook.com
- * @date 2022-03-02 19:24:55
+ * @date 2022-03-27 16:32:10
  */
 @Mapper
 public interface SkuFullReductionDao extends BaseMapper<SkuFullReductionEntity> {

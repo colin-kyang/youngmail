@@ -3,8 +3,6 @@ package com.example.youngmall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.example.youngmall.coupon.entity.CouponEntity;
-import com.example.youngmall.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.youngmall.coupon.entity.CouponEntity;
+import com.example.youngmall.coupon.service.CouponService;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.R;
 
@@ -22,22 +22,13 @@ import com.example.common.utils.R;
  *
  * @author colinyang
  * @email colin.kyang@outlook.com
- * @date 2022-03-02 19:24:56
+ * @date 2022-03-27 16:32:10
  */
 @RestController
-@RequestMapping("product/coupon")
+@RequestMapping("coupon/coupon")
 public class CouponController {
     @Autowired
     private CouponService couponService;
-
-    @RequestMapping("/member/list")
-    public R membercoupons()
-    {
-        CouponEntity couponEntity =new CouponEntity();
-        couponEntity.setCouponName("满100减10");
-        return R.ok().put("coupons",Arrays.asList(couponEntity));
-    }
-
 
     /**
      * 列表

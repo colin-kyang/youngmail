@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * spu属性值
@@ -15,6 +16,7 @@ import lombok.Data;
  * @date 2022-03-01 23:47:49
  */
 @Data
+@ToString
 @TableName("pms_product_attr_value")
 public class ProductAttrValueEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

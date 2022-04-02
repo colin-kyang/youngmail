@@ -1,7 +1,10 @@
 package com.example.youngmall.product.service.impl;
 
 import io.renren.common.utils.Query;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -18,9 +21,42 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        //page=2&limit=10&key=小米&catelogId=225&brandId=2&min=1000&max=5000
+        QueryWrapper<SkuInfoEntity> wrapper = new QueryWrapper<>();
+        //1）关键词
+        String key = (String) params.get("key");
+        if(!StringUtils.isEmpty(key)){
+            wrapper.and((obj)->{obj.eq("sku_id",key).or().like("sku_name",key);});
+        }
+        //2) 种类
+        String catelogId = (String) params.get("catelogId");
+        if(!StringUtils.isEmpty(catelogId) && !"0".equals(catelogId)){
+            wrapper.eq("catalog_id",catelogId);
+        }
+        //3) 品牌
+        String brandId = (String) params.get("brandId");
+        if(!StringUtils.isEmpty(brandId) && !"0".equals(brandId)){
+            wrapper.eq("brand_id",brandId);
+        }
+        //4) 价格区间
+        String maxx = (String) params.get("max");
+        String minn = (String) params.get("min");
+        if(!StringUtils.isEmpty(minn)){
+            wrapper.ge("price",minn);
+        }
+        if(!StringUtils.isEmpty(maxx)){
+            try{
+                BigDecimal max_ = new BigDecimal(maxx);
+                if(max_.compareTo(new BigDecimal(0))==1){
+                    wrapper.le("price",max_);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
         IPage<SkuInfoEntity> page = this.page(
                 new Query<SkuInfoEntity>().getPage(params),
-                new QueryWrapper<SkuInfoEntity>()
+                wrapper
         );
 
         return new PageUtils(page);

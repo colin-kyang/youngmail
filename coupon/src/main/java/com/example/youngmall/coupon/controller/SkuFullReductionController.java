@@ -3,12 +3,12 @@ package com.example.youngmall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.example.common.to.SkuReductionTO;
+import com.example.youngmall.coupon.entity.SkuLadderEntity;
+import com.example.youngmall.coupon.service.SkuLadderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.youngmall.coupon.entity.SkuFullReductionEntity;
 import com.example.youngmall.coupon.service.SkuFullReductionService;
@@ -22,10 +22,11 @@ import com.example.common.utils.R;
  *
  * @author colinyang
  * @email colin.kyang@outlook.com
- * @date 2022-03-02 19:24:55
+ * @date 2022-03-27 16:32:10
  */
 @RestController
-@RequestMapping("product/skufullreduction")
+@RequestMapping("coupon/skufullreduction")
+@Slf4j
 public class SkuFullReductionController {
     @Autowired
     private SkuFullReductionService skuFullReductionService;
@@ -78,6 +79,14 @@ public class SkuFullReductionController {
     public R delete(@RequestBody Long[] ids){
 		skuFullReductionService.removeByIds(Arrays.asList(ids));
 
+        return R.ok();
+    }
+
+    @PostMapping("/savereduction")
+    public R saveFullReduction(@RequestBody SkuReductionTO skuReductionTO)
+    {
+        log.info(skuReductionTO.toString());
+        skuFullReductionService.saveFullReduction(skuReductionTO);
         return R.ok();
     }
 

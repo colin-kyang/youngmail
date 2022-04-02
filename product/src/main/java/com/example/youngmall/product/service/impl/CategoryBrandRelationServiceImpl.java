@@ -42,6 +42,13 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     }
 
     @Override
+    public List<CategoryBrandRelationEntity> findRelationListByCatelogId(Long catelogId) {
+        QueryWrapper<CategoryBrandRelationEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("catelog_id",catelogId);
+        return baseMapper.selectList(wrapper);
+    }
+
+    @Override
     public void updateCategory(Long catId, String name) {
         CategoryBrandRelationEntity relationEntity=new CategoryBrandRelationEntity();
         relationEntity.setCatelogId(catId);
