@@ -1,9 +1,11 @@
 package com.example.youngmall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.common.to.SkuHasStockTo;
 import com.example.common.utils.PageUtils;
 import com.example.youngmall.ware.entity.WareSkuEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,5 +26,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
      * @param skuNum
      */
     void addStock(Long skuId, Long wareId, Integer skuNum);
+
+    List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds);
 }
 

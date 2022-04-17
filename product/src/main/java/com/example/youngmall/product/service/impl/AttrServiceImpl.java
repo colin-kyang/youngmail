@@ -1,10 +1,10 @@
 package com.example.youngmall.product.service.impl;
 
 import io.renren.common.utils.Query;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -44,4 +44,10 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return new PageUtils(page);
     }
 
+    @Override
+    public List<AttrEntity> findSearchShow() {
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("search_type",1);
+        return baseMapper.selectList(wrapper);
+    }
 }
