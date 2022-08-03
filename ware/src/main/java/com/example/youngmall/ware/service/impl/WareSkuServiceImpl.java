@@ -70,17 +70,27 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 
     }
 
-
+    /**
+     * 当前spu对应商品是否拥有库存
+     * @param skuIds
+     * @return
+     */
     @Override
     public List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds) {
         List<SkuHasStockTo> skuHasStockTos = skuIds.stream()
                 .map(item -> {
                     // select SUM(stock - stock_locked) from wms_ware_sku where sku_id = ?
                     SkuHasStockTo to = new SkuHasStockTo();
+                    //查询当前库存
                     Long sum = baseMapper.getSkuStock(item);
-                    log.info("skuId:",item);
                     to.setSkuId(item);
-                    to.setHasStock(sum > 0);
+                    //是否大于 0
+                    if (sum != null) {
+                        to.setHasStock(sum > 0);
+                    } else {
+                        // 远程查库存
+                        to.setHasStock(false);
+                    }
                     return to;
                 })
                 .collect(Collectors.toList());

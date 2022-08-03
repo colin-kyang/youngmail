@@ -256,22 +256,24 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     @Override
     @Transactional
     public void up(Long spuId) {
-        //查询将要展示的属性表
+        //查询spu对应商品到规格属性表
         List<ProductAttrValueEntity> productAttrValueEntities = productAttrValueService.findProductAttrBySpuId(spuId);
-        //查询显示属性表
+        //查询可以被检索到属性表
         List<Long> searchShow = attrService.findSearchShow()
                 .stream()
                 .map(item ->{
                     return item.getAttrId();
                 })
                 .collect(Collectors.toList());
-        //得到检索属性表
+        //对spu对应对规格属性表过滤，得到可以用于检索对属性表
         List<ProductAttrValueEntity> attrValues = productAttrValueEntities
                 .stream()
                 .filter(item ->{
+                    // 若该商品属性是需要显示的属性，则集合到attrValues
                     return searchShow.contains(item.getAttrId());
                 })
                 .collect(Collectors.toList());
+        // skuEsModel 中到attr集合
         List<SkuEsModel.Attr> attrsList = attrValues.stream()
                 .map(item ->{
                     SkuEsModel.Attr temp = new SkuEsModel.Attr();
@@ -279,17 +281,20 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                     return temp;
                 })
                 .collect(Collectors.toList());
+        // 上架商品名单
         List<SkuEsModel> upProducts = new ArrayList<>();
         // 组合复杂数据
         // 1. 查找skuInfo
         List<SkuInfoEntity> skuInfoEntityList = skuInfoService.findSkuInfoBySpuId(spuId);
-        // 发送远程调用，库存系统查询是否有库存
+        //依次获取spu对应sku编号的列表
         List<Long> skuIds = skuInfoEntityList.stream()
                         .map(item ->{
                             return item.getSkuId();
                         }).collect(Collectors.toList());
+        // 发送远程调用，库存系统查询是否有库存
         List<SkuHasStockTo>  skuHasStockTos  = (List<SkuHasStockTo>) wareFeignService.getSkusHasStock(skuIds).get("hasStock");
         Map<Long,Boolean> skuStockMap = null;
+        // 将其转化为map，[skuId,Boolean]
         try {
             skuStockMap = skuHasStockTos.stream().collect(Collectors.toMap(SkuHasStockTo::getSkuId,item -> item.getHasStock()));
         } catch(Exception e){
@@ -324,6 +329,13 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 //将数据发送给es 进行保存
         //将目标上架状态设置为 上架
         baseMapper.updateSpuStatus(spuId, ProductConstant.SpuStatus.PUBLISHED.getCode());
-        esFeignService.productStatusUp(upProducts);
+        R result = esFeignService.productStatusUp(upProducts);
+        if ((int)result.get("code") == 0) {
+            //远程调用成功
+            baseMapper.updateSpuStatus(spuId,ProductConstant.SpuStatus.PUBLISHED.getCode());
+        } else {
+            //远程调用失败
+            //重复调用问题：接口幂等性；重试机制
+        }
     }
 }

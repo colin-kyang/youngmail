@@ -3,6 +3,7 @@ package com.example.youngmall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.common.utils.PageUtils;
 import com.example.youngmall.product.entity.CategoryEntity;
+import com.example.youngmall.product.entity.vo.Catalog2Vo;
 
 import java.util.List;
 import java.util.Map;
@@ -24,5 +25,13 @@ public interface CategoryService extends IService<CategoryEntity> {
 
     Long[] findCategoryPath(Long catelogIdPath);
 
+    List<CategoryEntity> getLevel1Category();
+    Map<String,List<Catalog2Vo>> getCatelogJson();
+
+    Map<String,List<Catalog2Vo>> getCatelogJsonFromRedis();
+
+    Map<String, List<Catalog2Vo>> getCatelogJsonFromRedisWithRedisLock() throws InterruptedException;
+
+    Map<String, List<Catalog2Vo>> getCatelogJsonFromRedisWithRedissonLock() throws InterruptedException;
 }
 

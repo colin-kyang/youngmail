@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient("elastic-service")
+@FeignClient("yongmall-search")
 public interface EsFeignService {
-    @PostMapping("/es/search/save")
+    @PostMapping("/search/save/product")
     public R productStatusUp(@RequestBody List<SkuEsModel> skuEsModelList);
 }

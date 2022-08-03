@@ -78,6 +78,11 @@ public class WareSkuController {
         return R.ok();
     }
 
+    /**
+     * 是否拥有库存
+     * @param skuIds
+     * @return
+     */
     @PostMapping("/hasStock")
     public R getSkusHasStock(@RequestBody List<Long> skuIds){
         //sku_id,stock

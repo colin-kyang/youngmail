@@ -8,9 +8,21 @@ spring:
     name: yongmall-product
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+
 
 server:
   port: 6001
+
 
 
 #mybatis-plus:

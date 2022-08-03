@@ -52,6 +52,11 @@ public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueDao
         this.saveBatch(spuAttrs);
     }
 
+    /**
+     * 根据spu_id 查询商品属性-属性值
+     * @param spuId
+     * @return
+     */
     @Override
     public List<ProductAttrValueEntity> findProductAttrBySpuId(Long spuId) {
         QueryWrapper<ProductAttrValueEntity> wrapper = new QueryWrapper<>();
